@@ -1,0 +1,10 @@
+digraph sdg {
+	graph [rankdir=TB]
+	Entry [color=black fontcolor=black]
+	"int x = 0 " [color=blue fontcolor=blue]
+	Entry -> "int x = 0 "
+	"string str " [color=blue fontcolor=blue]
+	Entry -> "string str "
+	"str = input()" [color=green fontcolor=green]
+	Entry -> "str = input()"
+}

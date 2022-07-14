@@ -1,0 +1,7 @@
+digraph grammar {
+	graph [bgcolor=aliceblue rankdir=TB]
+	" y = y-1" -> "for (y!=16)"
+	"if (str==\"ola\")" -> " y = y-1"
+	"while(x<15)" -> DO
+	DO -> endCode
+}

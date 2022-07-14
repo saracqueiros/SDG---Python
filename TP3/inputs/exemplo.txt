@@ -1,0 +1,6 @@
+int x =0;
+string str;
+str = input();
+
+
+
