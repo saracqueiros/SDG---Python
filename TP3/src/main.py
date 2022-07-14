@@ -20,8 +20,9 @@ class MyInterpreter (Interpreter):
 
   def __init__(self):
     self.prev_node = list()
-    self.prev_node.append('Entry')
-    sdg.node('Entry', fontcolor='black', color='black')
+    self.vars = {}
+    self.prev_node.append('1')
+    sdg.node('1', label = "Entry", fontcolor='black', color='black')
     return 
 
   def start(self, tree):
@@ -38,6 +39,7 @@ class MyInterpreter (Interpreter):
     return self.visit(tree.children[0])
 
   def obtainNode(self, elems):
+    #obter o nodo para desenhar 
     node = ''
     for elem in elems:
       if isinstance(elem, Token):
@@ -51,16 +53,57 @@ class MyInterpreter (Interpreter):
                node = node + i + ' '
     return node
 
+  def calcDependencies(self, elems):
+    listDep = []
+    rest = {}
+    variavel = ''
+    if elems[0].type == 'WORD':
+      variavel = elems[0]
+      rest = elems[2:]
+    else:
+      variavel = elems[1]
+      rest = elems[3:]
+
+    for i in rest:
+      if not isinstance(i, Token):
+        for const in i :
+          if const.type == 'WORD':
+            if const in self.vars:  
+              r = const+str(self.vars[const]['used'])
+              listDep.append(r)
+    tagVar = ''
+    if variavel not in self.vars:
+      self.vars[variavel]= {'used': 1} 
+      tagVar = variavel+'1'
+    else:
+      self.vars[variavel]['used'] += 1
+      tagVar = variavel + str(self.vars[variavel]['used'])
+    return listDep, tagVar
+
+
+
+  def drawDepDados(self, listDep, tagVar):
+    for l in listDep:
+      sdg.edge(l, tagVar, style = 'dotted')
+    return 
+
+
+
 
   def declaracoes(self, tree):
     #declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput 
     dec = self.visit(tree.children[0])
     #formar a string necessária, meter num nodo e ligar o nodo ao anterior 
     node = self.obtainNode(dec)
-    sdg.node(node, fontcolor='blue', color='blue')
-    sdg.edge(self.prev_node[-1], node)
+    listDep, tagVar = self.calcDependencies(dec)
+    print("tagVar nas decls" , tagVar)
+    sdg.node(tagVar, label = node, fontcolor='blue', color='blue')
+    sdg.edge(self.prev_node[-1], tagVar)
     
-
+    #desenhar dependendencias de dados 
+    print(listDep, tagVar, "é tudo")
+    self.drawDepDados(listDep, tagVar)
+    
     return
  
 
@@ -68,8 +111,10 @@ class MyInterpreter (Interpreter):
     # atribuicoes: WORD IGUAL (var | operacao | input |lista | dicionario) 
     var = self.visit_children(tree)
     node = self.obtainNode(var)
-    sdg.node(node, fontcolor='green', color='green')
-    sdg.edge(self.prev_node[-1], node)
+    listDep, tagVar = self.calcDependencies(var)
+    sdg.node(tagVar , label = node, fontcolor='green', color='green')
+    sdg.edge(self.prev_node[-1], tagVar)
+    self.drawDepDados(listDep, tagVar)
     return 
   
 

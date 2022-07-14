@@ -1,10 +1,24 @@
 digraph sdg {
 	graph [rankdir=TB]
-	Entry [color=black fontcolor=black]
-	"int x = 0 " [color=blue fontcolor=blue]
-	Entry -> "int x = 0 "
-	"string str " [color=blue fontcolor=blue]
-	Entry -> "string str "
-	"str = input()" [color=green fontcolor=green]
-	Entry -> "str = input()"
+	1 [label=Entry color=black fontcolor=black]
+	x1 [label="int x = 0 " color=blue fontcolor=blue]
+	1 -> x1
+	y1 [label="int y = 1 + x " color=blue fontcolor=blue]
+	1 -> y1
+	x1 -> y1 [style=dotted]
+	z1 [label="int z = 1 " color=blue fontcolor=blue]
+	1 -> z1
+	y2 [label="y = x + 1 " color=green fontcolor=green]
+	1 -> y2
+	x1 -> y2 [style=dotted]
+	z2 [label="z = x " color=green fontcolor=green]
+	1 -> z2
+	x1 -> z2 [style=dotted]
+	z3 [label="z = y + 1 " color=green fontcolor=green]
+	1 -> z3
+	y2 -> z3 [style=dotted]
+	x2 [label="x = z + y " color=green fontcolor=green]
+	1 -> x2
+	z3 -> x2 [style=dotted]
+	y2 -> x2 [style=dotted]
 }
